@@ -66,6 +66,21 @@ out of an archive.
 - Imported scripts and configuration are treated as data and never executed.
 - Output paths containing symlink components are rejected (`unsafe_output_path`).
 
+## Running the tests
+
+```bash
+python3 scripts/test_workspace_easy_pack.py
+```
+
+The suite runs 33 end-to-end tests on synthetic fixtures in temporary
+directories. It needs no network, no credentials and no third-party packages,
+and it does not write to the packaged source files.
+
+The suite writes into the system temporary directory. On macOS that directory
+(`/var/folders/...`) sits behind a symbolic link, which the CLI rejects by
+design, so all 33 tests fail with `unsafe_output_path` unless `TMPDIR` points at
+a real directory — see the macOS note below.
+
 ## macOS note
 
 On macOS, `tempfile.gettempdir()` returns `/var/folders/...` and both `/var` and

@@ -2,6 +2,8 @@
 
 Status: **pending independent re-audit**. This build addresses findings H1, M1, M2, M3, and L1 from the independent technical audit. Passing these tests is not a substitute for a new independent security review.
 
+> Note added later: a second independent review has been completed. Its outcome is recorded in `audit/README.md`; the text above remains the original post-fix test record.
+
 ## Contents
 
 - Result

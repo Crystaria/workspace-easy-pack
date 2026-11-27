@@ -18,12 +18,13 @@ observed on a specific machine it is marked **[verified]** or **[unverified]**.
 
 ## Credential handling
 
-3. **Heuristic screening.** Patterns cover the documented shapes (OpenAI `sk-`,
-   GitHub `gh*_`, AWS `AKIA`, Slack `xox*`, Google `AIza`, Hugging Face `hf_`,
-   GitLab `glpat-`, xAI/Grok `xai-`, Groq `gsk_`, three-segment JWTs). Other
-   formats, bespoke secrets and sensitive non-credential information are not
-   guaranteed to be detected. Always review `excluded_files` and the archive
-   before sharing.
+3. **Heuristic screening — N2 (Low).** Patterns cover some documented shapes
+   (for example OpenAI `sk-`, GitHub `gh*_`, AWS `AKIA`, Slack `xox*`, Google
+   `AIza`, Hugging Face `hf_`, GitLab `glpat-`, xAI/Grok `xai-`, Groq `gsk_`,
+   three-segment JWTs), but detection is incomplete. Known gaps include
+   `github_pat_`, `sk_live_` and `npm_` formats, and bespoke secrets or sensitive
+   non-credential information are not covered at all. Always review
+   `excluded_files` and the archive before sharing.
 4. **Exclusion is whole-file.** A suspect file is dropped in full; there is no
    partial redaction and no secret value is ever written into a report.
 
@@ -35,7 +36,7 @@ observed on a specific machine it is marked **[verified]** or **[unverified]**.
    **[unverified]**
 6. **Windows not verified.** Path, case-folding and normalization behaviour was
    never executed on Windows. **[unverified]**
-7. **macOS only partially usable.** `safe_user_path` rejects any output path with
+7. **macOS only partially usable — N3 (Low).** `safe_user_path` rejects any output path with
    a symlinked component, and macOS exposes `/var` and `/tmp` as symlinks. As a
    result the stock test suite fails on macOS (`33/33` failing with
    `unsafe_output_path: path component '/var' is a symbolic link`) and any
@@ -63,10 +64,20 @@ observed on a specific machine it is marked **[verified]** or **[unverified]**.
 
 ## Release process
 
-14. **Audit status.** The first independent audit's findings H1, M1, M2, M3 and
-    L1 are addressed in this build, but the **second independent audit has not
-    been completed**, and the audit reports themselves are not in this
-    repository. See [../audit/README.md](../audit/README.md).
+14. **Audit status — PARTIAL (conditional pass).** The second independent review
+    verified the H1, M1, M2 and L1 fixes and confirmed that the M3 documentation
+    matches the implementation. It did not return a full pass: N1, N2 and N3
+    remain open and are tracked as items 16, 3 and 7 here. Neither audit report
+    text is present in this repository, and none has been reconstructed. See
+    [../audit/README.md](../audit/README.md).
 15. **Synthetic fixtures only.** All tests run on generated data; token strings
     in `scripts/test_workspace_easy_pack.py` are deliberate placeholders and are
     not usable credentials.
+
+## Concurrency
+
+16. **TOCTOU race — N1 (Medium).** Path validation and the subsequent filesystem
+    write are not atomic, so a time-of-check/time-of-use race is possible under
+    specific concurrent conditions. Avoid pointing `--output`, `--target`,
+    `--restored` or `--report` at locations that other processes are modifying at
+    the same time.
