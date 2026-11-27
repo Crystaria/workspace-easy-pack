@@ -1,0 +1,35 @@
+# macOS metadata & editor noise
+.DS_Store
+._*
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Local scratch used when running the suite on macOS (TMPDIR workaround)
+/_local-tmp/
+/tmp/
+
+# Generated workspace packages and reports (keep the repo source-only)
+/*.zip
+/workspace-easy-pack.zip
+/inspection.*
+/verification.*
+/restored-workspace/
+
+# Credentials
+.env
+.env.*
+
+# NOTE: dist/ is intentionally tracked. The .gitignore that shipped inside the
+# source drop ignored dist/, *.skill, *.zip and *.gz — that would exclude the
+# release artifacts this repository is supposed to hold.
+!/dist/
+!/dist/*.gz
+!/dist/*.skill
+!/dist/README.md

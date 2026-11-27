@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WorkspaceEasyPack Manifest",
+  "type": "object",
+  "required": ["package_name", "package_version", "schema_version", "export_timestamp", "source_platform", "source_agent", "files", "excluded_files"],
+  "properties": {
+    "package_name": {"type": "string"},
+    "package_version": {"const": "0.1.0"},
+    "schema_version": {"const": "1.0"},
+    "export_timestamp": {"type": "string", "format": "date-time"},
+    "source_platform": {"type": ["string", "null"]},
+    "source_agent": {"type": ["string", "null"]},
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "file_type", "data_category", "size", "sha256", "source", "media_type", "ai_transformed"],
+        "properties": {
+          "path": {"type": "string"},
+          "file_type": {"enum": ["original", "normalized_copy", "generated_index", "generated_report", "generated_guide"]},
+          "data_category": {"enum": ["profile", "agent", "memory", "projects", "workflows", "skills", "tools", "unknown"]},
+          "size": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source": {"type": "string"},
+          "media_type": {"type": "string"},
+          "ai_transformed": {"type": "boolean"},
+          "derived_from": {"type": "array", "items": {"type": "string"}},
+          "transformations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "excluded_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "reason", "size", "sha256"],
+        "properties": {
+          "source": {"type": "string"},
+          "reason": {"type": "string"},
+          "size": {"type": ["integer", "null"]},
+          "sha256": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}
